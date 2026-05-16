@@ -15,16 +15,16 @@ app.use(express.json());
 // TEMPORARY - Setup database tables
 app.get('/setup-db', async (req, res) => {
   try {
-    await pool.query(`
-      CREATE TABLE IF NOT EXISTS tenants (
+    await pool.query(`CREATE TABLE IF NOT EXISTS tenants (
         id BIGSERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         code VARCHAR(100) UNIQUE NOT NULL,
         status VARCHAR(20) DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-      CREATE TABLE IF NOT EXISTS institutes (
+      )`);
+
+    await pool.query(`CREATE TABLE IF NOT EXISTS institutes (
         id BIGSERIAL PRIMARY KEY,
         tenant_id BIGINT,
         name VARCHAR(255) NOT NULL,
@@ -34,8 +34,9 @@ app.get('/setup-db', async (req, res) => {
         status VARCHAR(20) DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-      CREATE TABLE IF NOT EXISTS users (
+      )`);
+
+    await pool.query(`CREATE TABLE IF NOT EXISTS users (
         id BIGSERIAL PRIMARY KEY,
         first_name VARCHAR(100) NOT NULL,
         last_name VARCHAR(100),
@@ -46,8 +47,9 @@ app.get('/setup-db', async (req, res) => {
         status VARCHAR(20) DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-      CREATE TABLE IF NOT EXISTS roles (
+      )`);
+
+    await pool.query(`CREATE TABLE IF NOT EXISTS roles (
         id BIGSERIAL PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
         code VARCHAR(100) UNIQUE NOT NULL,
@@ -55,8 +57,9 @@ app.get('/setup-db', async (req, res) => {
         status VARCHAR(20) DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-      CREATE TABLE IF NOT EXISTS user_institute_roles (
+      )`);
+
+    await pool.query(`CREATE TABLE IF NOT EXISTS user_institute_roles (
         id BIGSERIAL PRIMARY KEY,
         tenant_id BIGINT,
         institute_id BIGINT,
@@ -66,8 +69,8 @@ app.get('/setup-db', async (req, res) => {
         status VARCHAR(20) DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+      )`);
+
     res.json({ success: true, message: 'All tables created successfully!' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
