@@ -12,7 +12,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// TEMPORARY - Setup database tables
+// Setup database tables
 app.get('/setup-db', async (req, res) => {
   try {
     await pool.query(`CREATE TABLE IF NOT EXISTS tenants (
@@ -72,6 +72,42 @@ app.get('/setup-db', async (req, res) => {
       )`);
 
     res.json({ success: true, message: 'All tables created successfully!' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Seed data
+app.get('/seed-data', async (req, res) => {
+  try {
+    await pool.query(`
+      INSERT INTO tenants (name, code, status)
+      VALUES ('Young Engineers Lab', 'YEL', 'active')
+      ON CONFLICT (code) DO NOTHING
+    `);
+
+    await pool.query(`
+      INSERT INTO institutes (tenant_id, name, code, type, status) VALUES
+      (1, 'Young Engineers Lab Nagpur', 'YEL-NGP', 'training_centre', 'active'),
+      (1, 'GNIET Nagpur', 'GNIET-NGP', 'college', 'active'),
+      (1, 'Young Engineers Lab Pune', 'YEL-PNE', 'training_centre', 'active'),
+      (1, 'Young Engineers Lab Mumbai', 'YEL-MUM', 'training_centre', 'active'),
+      (1, 'RCOEM Nagpur', 'RCOEM-NGP', 'college', 'active')
+      ON CONFLICT (code) DO NOTHING
+    `);
+
+    await pool.query(`
+      INSERT INTO roles (name, code) VALUES
+      ('Super Admin', 'super_admin'),
+      ('Institute Admin', 'institute_admin'),
+      ('Trainer', 'trainer'),
+      ('Student', 'student'),
+      ('Parent', 'parent'),
+      ('Staff', 'staff')
+      ON CONFLICT (code) DO NOTHING
+    `);
+
+    res.json({ success: true, message: 'Seed data inserted!' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
