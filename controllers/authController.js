@@ -63,6 +63,7 @@ const getMyInstitutesRoles = async (req, res) => {
         uir.tenant_id,
         uir.institute_id,
         i.name as institute_name,
+        i.image_url as institute_image,
         uir.role_id,
         r.name as role_name
       FROM user_institute_roles uir
@@ -86,6 +87,7 @@ const getMyInstitutesRoles = async (req, res) => {
                     tenant_id: row.tenant_id,
                     institute_id: row.institute_id,
                     institute_name: row.institute_name,
+                    institute_image: row.institute_image,
                     roles: []
                 };
             }
@@ -100,6 +102,7 @@ const getMyInstitutesRoles = async (req, res) => {
         res.status(500).json({ success: false, message: err.message });
     }
 };
+
 // Create final access token with full info
 const selectContext = async (req, res) => {
     const { tenant_id, institute_id, role_id } = req.body;
