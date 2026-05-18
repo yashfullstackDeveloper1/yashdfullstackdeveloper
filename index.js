@@ -23,7 +23,6 @@ app.get('/setup-db', async (req, res) => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )`);
-
     await pool.query(`CREATE TABLE IF NOT EXISTS institutes (
         id BIGSERIAL PRIMARY KEY,
         tenant_id BIGINT,
@@ -35,7 +34,6 @@ app.get('/setup-db', async (req, res) => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )`);
-
     await pool.query(`CREATE TABLE IF NOT EXISTS users (
         id BIGSERIAL PRIMARY KEY,
         first_name VARCHAR(100) NOT NULL,
@@ -48,7 +46,6 @@ app.get('/setup-db', async (req, res) => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )`);
-
     await pool.query(`CREATE TABLE IF NOT EXISTS roles (
         id BIGSERIAL PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
@@ -58,7 +55,6 @@ app.get('/setup-db', async (req, res) => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )`);
-
     await pool.query(`CREATE TABLE IF NOT EXISTS user_institute_roles (
         id BIGSERIAL PRIMARY KEY,
         tenant_id BIGINT,
@@ -70,7 +66,6 @@ app.get('/setup-db', async (req, res) => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )`);
-
     res.json({ success: true, message: 'All tables created successfully!' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -85,7 +80,6 @@ app.get('/seed-data', async (req, res) => {
       VALUES ('Young Engineers Lab', 'YEL', 'active')
       ON CONFLICT (code) DO NOTHING
     `);
-
     await pool.query(`
       INSERT INTO institutes (tenant_id, name, code, type, status) VALUES
       (1, 'Young Engineers Lab Nagpur', 'YEL-NGP', 'training_centre', 'active'),
@@ -95,7 +89,6 @@ app.get('/seed-data', async (req, res) => {
       (1, 'RCOEM Nagpur', 'RCOEM-NGP', 'college', 'active')
       ON CONFLICT (code) DO NOTHING
     `);
-
     await pool.query(`
       INSERT INTO roles (name, code) VALUES
       ('Super Admin', 'super_admin'),
@@ -106,8 +99,50 @@ app.get('/seed-data', async (req, res) => {
       ('Staff', 'staff')
       ON CONFLICT (code) DO NOTHING
     `);
-
     res.json({ success: true, message: 'Seed data inserted!' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Fix mappings
+app.get('/fix-mappings', async (req, res) => {
+  try {
+    await pool.query('DELETE FROM user_institute_roles');
+
+    // ayushn - 1 institute + 1 role (Admin)
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 1, 2, 2, true)`);
+
+    // divyanshu - 1 institute + 2 roles (Admin + Trainer)
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 1, 3, 2, true)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 1, 3, 3, false)`);
+
+    // yashd - 5 institutes + 3 roles each (Admin + Trainer + Student)
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 1, 4, 2, true)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 1, 4, 3, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 1, 4, 4, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 2, 4, 2, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 2, 4, 3, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 2, 4, 4, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 3, 4, 2, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 3, 4, 3, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 3, 4, 4, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 4, 4, 2, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 4, 4, 3, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 4, 4, 4, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 5, 4, 2, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 5, 4, 3, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 5, 4, 4, false)`);
+
+    // ayushl - 3 institutes + 2 roles each (Admin + Trainer)
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 1, 5, 2, true)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 1, 5, 3, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 2, 5, 2, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 2, 5, 3, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 3, 5, 2, false)`);
+    await pool.query(`INSERT INTO user_institute_roles (tenant_id, institute_id, user_id, role_id, is_primary) VALUES (1, 3, 5, 3, false)`);
+
+    res.json({ success: true, message: 'All mappings fixed!' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
