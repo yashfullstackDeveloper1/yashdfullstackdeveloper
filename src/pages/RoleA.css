@@ -1,0 +1,141 @@
+:root {
+  --bg-color: #f8fafc;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --accent-blue: #5985e1;
+  --border-color: #e2e8f0;
+}
+
+.page-wrapper {
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 2.5rem;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-logo { width: 28px; }
+.brand-name { font-weight: 700; font-size: 1.1rem; color: #0f172a; }
+
+.navbar .user-avatar {
+  width: 40px;
+  height: 40px;
+  background: #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Main Content */
+.content-area {
+  max-width: 500px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.back-btn {
+  background: white;
+  border: 1px solid var(--border-color);
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-bottom: 2rem;
+  transition: all 0.2s;
+}
+
+.back-btn:hover { background: #f1f5f9; }
+
+/* Institute Card */
+.institute-highlight-card {
+  background: #eff6ff; /* Light blue tint */
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  padding: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.inst-info { display: flex; align-items: center; gap: 1rem; }
+
+.inst-logo-box {
+  background: white;
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.inst-details { text-align: left; }
+.inst-details h3 { margin: 0; font-size: 1rem; color: #1e3a8a; }
+.inst-details p { margin: 0; font-size: 0.8rem; color: var(--text-muted); }
+
+.verified-badge svg { width: 24px; height: 24px; }
+
+/* Selection Text */
+.selection-header h1 { font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; }
+.selection-header p { color: var(--text-muted); margin-bottom: 2rem; }
+
+/* Role Cards */
+.role-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+
+.role-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  border-color: var(--accent-blue);
+}
+
+.role-icon {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.role-icon svg { width: 24px; height: 24px; }
+.admin-icon { color: #059669; }
+.trainer-icon { color: var(--accent-blue); }
+
+.role-text { flex-grow: 1; text-align: left; }
+.role-text h4 { margin: 0; font-size: 1.05rem; }
+.role-text span { font-size: 0.85rem; color: var(--text-muted); }
+
+.chevron { color: #cbd5e1; font-size: 1.5rem; }
+
+/* Footer */
+.help-footer { margin-top: 4rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+.help-footer a { color: var(--accent-blue); text-decoration: none; font-weight: 500; }
+
+.align{
+  height: 29px;
+}

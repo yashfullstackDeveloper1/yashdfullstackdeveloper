@@ -1,0 +1,202 @@
+:root {
+  --bg-color: #f8fafc;
+  --header-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --blue-bg: #eff6ff;
+  --blue-text: #1e40af;
+  --green-bg: #f0fdf4;
+  --green-text: #166534;
+  --orange-bg: #fff7ed;
+  --orange-text: #9a3412;
+  --purple-bg: #f5f3ff;
+  --purple-text: #5b21b6;
+}
+
+.dashboard-container {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+}
+
+/* Header Styling */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 2.5rem;
+  background: var(--header-bg);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #003366;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-logo {
+  display: block;
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.user-avatar {
+  background: #f1f5f9;
+  color: #64748b;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.logout-btn {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: transparent;
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.location-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.location-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.user-avatar {
+  background: #f1f5f9;
+  color: #64748b;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e2e8f0;
+}
+
+.logout-btn {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: transparent;
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Hero Section */
+.dashboard-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px;
+  text-align: center;
+}
+
+.welcome-section h1 {
+  font-size: 1.8rem;
+  margin-bottom: 4px;
+}
+
+.welcome-section h2 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #1e293b;
+  margin-bottom: 30px;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.stat-card {
+  padding: 20px 24px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.stat-count {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.stat-description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+/* Color Variations */
+.blue-card {
+  background-color: var(--blue-bg);
+  color: var(--blue-text);
+}
+
+.green-card {
+  background-color: var(--green-bg);
+  color: var(--green-text);
+}
+
+.orange-card {
+  background-color: var(--orange-bg);
+  color: var(--orange-text);
+}
+
+.purple-card {
+  background-color: var(--purple-bg);
+  color: var(--purple-text);
+}

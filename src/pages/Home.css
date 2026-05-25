@@ -1,0 +1,133 @@
+:root {
+  --bg-color: #f8fafc;
+  --header-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+    --blue-bg: #eff6ff;
+  --blue-text: #1e40af;
+  --green-bg: #f0fdf4;
+  --green-text: #166534;
+  --orange-bg: #fff7ed;
+  --orange-text: #9a3412;
+  --purple-bg: #f5f3ff;
+  --purple-text: #5b21b6;
+}
+
+.dashboard-container {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+}
+
+/* Header Styling */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2.5rem;
+  background: var(--header-bg);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #003366;
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.location-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.user-controls .user-avatar {
+  background: #10b981;
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout-btn {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: transparent;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.logout-btn:hover {
+  background: #fef2f2;
+}
+
+/* Hero Section */
+.dashboard-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+
+.welcome-section h2 {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+
+}
+
+.stat-card {
+  border-radius: 16px;
+  text-align: left;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-count {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.stat-description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+/* Color Variations */
+.blue-card { background-color: var(--blue-bg); color: var(--blue-text); }
+.green-card { background-color: var(--green-bg); color: var(--green-text); }
+.orange-card { background-color: var(--orange-bg); color: var(--orange-text); }
+.purple-card { background-color: var(--purple-bg); color: var(--purple-text); }
