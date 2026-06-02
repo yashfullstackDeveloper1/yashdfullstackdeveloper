@@ -1,20 +1,26 @@
 import { test, expect } from '@playwright/test';
-import { login, users } from './helpers';
+
+async function login(page, email, password) {
+  await page.goto('/');
+  await page.getByTestId('login-email-or-phone').fill(email);
+  await page.getByTestId('login-password').fill(password);
+  await page.getByTestId('login-submit').click();
+}
 
 test('Institute Selection Test', async ({ page }) => {
-  await login(page, users.multiInstitute);
+  await login(page, 'yashd@gmail.com', '123');
 
   await expect(page.getByPlaceholder('Search your institute')).toBeVisible();
 });
 
 test('Three Institutes Validation', async ({ page }) => {
-  await login(page, users.threeInstitutes);
+  await login(page, 'ayushl@gmail.com', '123');
 
   await expect(page.locator('.inst-card')).toHaveCount(3);
 });
 
 test('Institute Selection Navigation', async ({ page }) => {
-  await login(page, users.multiInstitute);
+  await login(page, 'yashd@gmail.com', '123');
 
   await expect(page.locator('.inst-card').first()).toBeVisible();
 
@@ -24,7 +30,7 @@ test('Institute Selection Navigation', async ({ page }) => {
 });
 
 test('Search Institute Test', async ({ page }) => {
-  await login(page, users.multiInstitute);
+  await login(page, 'yashd@gmail.com', '123');
 
   await expect(page.getByPlaceholder('Search your institute')).toBeVisible();
 
