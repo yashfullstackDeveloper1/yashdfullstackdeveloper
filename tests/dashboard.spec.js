@@ -1,79 +1,44 @@
 import { test, expect } from '@playwright/test';
+import { login, users } from './helpers';
 
-const appUrl = 'https://incomparable-sfogliatella-1c28bb.netlify.app/';
-
-async function mockAuthApi(page) {
-  await page.route('**/auth/login', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        success: true,
-        pre_context_token: 'test-pre-context-token',
-        user: { full_name: 'Ayush N', email: 'ayushn@gmail.com' },
-      }),
-    });
-  });
-
-  await page.route('**/auth/my-institutes-roles', async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        success: true,
-        data: [
-          {
-            institute_id: 1,
-            tenant_id: 1,
-            institute_name: 'Young Engineers Lab Nagpur',
-            roles: [{ role_id: 1, role_name: 'Admin' }],
-          },
-        ],
-      }),
-    });
-  });
-}
-
-async function login(page) {
-  await mockAuthApi(page);
-  await page.goto(appUrl);
-  await page.locator('input').nth(0).fill('ayushn@gmail.com');
-  await page.locator('input').nth(1).fill('123');
-  await page.getByText('Continue').click();
-  await expect(page.getByText('Hey Ayush N')).toBeVisible();
+async function loginAsAdmin(page) {
+  await login(page, users.admin);
+  await expect(page.getByRole('heading', { name: /Hey Ayush N/i })).toBeVisible();
 }
 
 test('Dashboard Initial Load', async ({ page }) => {
-  await login(page);
-  await expect(page.getByText('Hey Ayush N')).toBeVisible();
+  await loginAsAdmin(page);
 });
 
 test('User Information Display', async ({ page }) => {
-  await login(page);
-  await expect(page.getByText('Hey Ayush N')).toBeVisible();
+  await loginAsAdmin(page);
+  await expect(page.getByRole('heading', { name: /Hey Ayush N/i })).toBeVisible();
 });
 
 test('Dashboard UI Verification', async ({ page }) => {
-  await login(page);
-  await expect(page.getByRole('heading', { name: 'Welcome to MentrixOS Admin Panel!' })).toBeVisible();
+  await loginAsAdmin(page);
+
+  await expect(page.getByRole('heading', { name: /Welcome to MentrixOS/i })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Active Institutes', exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Total Users' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Total Users', exact: true })).toBeVisible();
 });
 
 test('Logout Functionality', async ({ page }) => {
-  await login(page);
-  await page.getByText('Logout').click();
-  await expect(page.getByText('Continue')).toBeVisible();
+  await loginAsAdmin(page);
+
+  await page.getByRole('button', { name: 'Logout' }).click();
+
+  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
 });
 
 test('Back Navigation After Logout', async ({ page }) => {
-  await login(page);
-  await page.getByText('Logout').click();
-  await expect(page.getByText('Continue')).toBeVisible();
+  await loginAsAdmin(page);
 
-  await page.goBack().catch(() => null);
-  await page.goto(appUrl);
+  await page.getByRole('button', { name: 'Logout' }).click();
 
-  await expect(page.getByText('Continue')).toBeVisible();
-  await expect(page.getByText('Logout')).not.toBeVisible();
+  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
+
+  await page.goBack();
+
+  await expect(page.getByRole('heading', { name: /Hey Ayush N/i })).not.toBeVisible();
 });

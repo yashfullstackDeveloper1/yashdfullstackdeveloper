@@ -1,12 +1,5 @@
 import { test, expect } from '@playwright/test';
-
-const appUrl = 'https://incomparable-sfogliatella-1c28bb.netlify.app/';
-
-async function openLogin(page) {
-  await page.goto(appUrl);
-  await expect(page.getByPlaceholder('Enter phone or email')).toBeVisible();
-  await expect(page.getByPlaceholder('...')).toBeVisible();
-}
+import { openLogin } from './helpers';
 
 function themeToggle(page) {
   return page.locator('.top-right-actions .icon-btn').nth(1);
@@ -37,7 +30,7 @@ test('Theme State After Refresh', async ({ page }) => {
   await expect(loginContainer(page)).toHaveClass(/dark-theme/);
 
   await page.reload();
-  await expect(page.getByPlaceholder('Enter phone or email')).toBeVisible();
+  await expect(page.getByTestId('login-email-or-phone')).toBeVisible();
   await expect(loginContainer(page)).not.toHaveClass(/dark-theme/);
 });
 
@@ -46,7 +39,7 @@ test('Text Readability in Dark Mode', async ({ page }) => {
   await themeToggle(page).click();
 
   await expect(page.getByRole('heading', { name: /Mentrix\s*OS/i })).toBeVisible();
-  await expect(page.getByPlaceholder('Enter phone or email')).toBeVisible();
-  await expect(page.getByPlaceholder('...')).toBeVisible();
+  await expect(page.getByTestId('login-email-or-phone')).toBeVisible();
+  await expect(page.getByTestId('login-password')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
 });
