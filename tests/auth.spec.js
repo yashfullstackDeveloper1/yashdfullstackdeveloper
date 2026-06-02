@@ -1,24 +1,28 @@
 import { test, expect } from '@playwright/test';
-import { login, users } from './helpers';
+
+async function login(page, email, password) {
+  await page.goto('/');
+  await page.getByTestId('login-email-or-phone').fill(email);
+  await page.getByTestId('login-password').fill(password);
+  await page.getByTestId('login-submit').click();
+}
 
 test('Invalid login test', async ({ page }) => {
-  await login(page, { email: 'wrong@gmail.com', password: 'wrong123' });
+  await login(page, 'wrong@gmail.com', 'wrong123');
 
-  await expect(
-    page.getByTestId('login-error')
-  ).toContainText(/invalid|incorrect|please enter/i);
+  await expect(page.getByTestId('login-error')).toContainText('Invalid credentials');
 });
 
-test(' loValidgin test', async ({ page }) => {
-  await login(page, users.admin);
+test('Valid login test', async ({ page }) => {
+  await login(page, 'ayushn@gmail.com', '123');
 
-  await expect(page.getByRole('heading', { name: /Hey Ayush N/i })).toBeVisible();
+  await expect(page.getByText('Hey Ayush N')).toBeVisible();
 });
 
 test('Logout test', async ({ page }) => {
-  await login(page, users.admin);
+  await login(page, 'ayushn@gmail.com', '123');
 
-  await expect(page.getByRole('heading', { name: /Hey Ayush N/i })).toBeVisible();
+  await expect(page.getByText('Hey Ayush N')).toBeVisible();
 
   await page.getByRole('button', { name: 'Logout' }).click();
 
