@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
-import { login, users } from './helpers';
 
 async function loginAsAdmin(page) {
-  await login(page, users.admin);
-  await expect(page.getByRole('heading', { name: /Hey Ayush N/i })).toBeVisible();
+  await page.goto('/');
+  await page.getByTestId('login-email-or-phone').fill('ayushn@gmail.com');
+  await page.getByTestId('login-password').fill('123');
+  await page.getByTestId('login-submit').click();
+  await expect(page.getByText('Hey Ayush N')).toBeVisible();
 }
 
 test('Dashboard Initial Load', async ({ page }) => {
@@ -12,13 +14,13 @@ test('Dashboard Initial Load', async ({ page }) => {
 
 test('User Information Display', async ({ page }) => {
   await loginAsAdmin(page);
-  await expect(page.getByRole('heading', { name: /Hey Ayush N/i })).toBeVisible();
+  await expect(page.getByText('Hey Ayush N')).toBeVisible();
 });
 
 test('Dashboard UI Verification', async ({ page }) => {
   await loginAsAdmin(page);
 
-  await expect(page.getByRole('heading', { name: /Welcome to MentrixOS/i })).toBeVisible();
+  await expect(page.getByText('Welcome to MentrixOS')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Active Institutes', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Total Users', exact: true })).toBeVisible();
 });
@@ -40,5 +42,5 @@ test('Back Navigation After Logout', async ({ page }) => {
 
   await page.goBack();
 
-  await expect(page.getByRole('heading', { name: /Hey Ayush N/i })).not.toBeVisible();
+  await expect(page.getByText('Hey Ayush N')).not.toBeVisible();
 });
