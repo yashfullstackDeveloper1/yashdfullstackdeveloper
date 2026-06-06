@@ -1,30 +1,27 @@
 import { test, expect } from '@playwright/test';
+import { login, loginAndExpectDashboard, expectLoggedOut } from './support/helpers.js';
+import { testUsers } from './support/testConfig.js';
 
-async function login(page, email, password) {
-  await page.goto('/');
-  await page.getByTestId('login-email-or-phone').fill(email);
-  await page.getByTestId('login-password').fill(password);
-  await page.getByTestId('login-submit').click();
-}
+test.use({ storageState: { cookies: [], origins: [] } });
 
-test('Invalid login test', async ({ page }) => {
-  await login(page, 'wrong@gmail.com', 'wrong123');
+test.describe('Authentication', () => {
+  test('shows an error for invalid credentials', async ({ page }) => {
+    await login(page, testUsers.invalid);
 
-  await expect(page.getByTestId('login-error')).toContainText('Invalid credentials');
-});
+    await expect(page.getByTestId('login-error')).toContainText('Invalid credentials');
+    await expect(page.getByTestId('login-form')).toBeVisible();
+  });
 
-test('Valid login test', async ({ page }) => {
-  await login(page, 'ayushn@gmail.com', '123');
+  test('allows a valid user to log in', async ({ page }) => {
+    await loginAndExpectDashboard(page, testUsers.admin);
+  });
 
-  await expect(page.getByText('Hey Ayush N')).toBeVisible();
-});
+  test('clears the session on logout', async ({ page }) => {
+    await loginAndExpectDashboard(page, testUsers.admin);
 
-test('Logout test', async ({ page }) => {
-  await login(page, 'ayushn@gmail.com', '123');
+    await page.getByRole('button', { name: 'Logout' }).click();
 
-  await expect(page.getByText('Hey Ayush N')).toBeVisible();
-
-  await page.getByRole('button', { name: 'Logout' }).click();
-
-  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
+    await expectLoggedOut(page);
+    await expect(page.evaluate(() => localStorage.getItem('user'))).resolves.toBeNull();
+  });
 });

@@ -1,46 +1,41 @@
 import { test, expect } from '@playwright/test';
+import { expectDashboardLoaded, expectLoggedOut } from './support/helpers.js';
+import { testUsers } from './support/testConfig.js';
 
-async function loginAsAdmin(page) {
-  await page.goto('/');
-  await page.getByTestId('login-email-or-phone').fill('ayushn@gmail.com');
-  await page.getByTestId('login-password').fill('123');
-  await page.getByTestId('login-submit').click();
-  await expect(page.getByText('Hey Ayush N')).toBeVisible();
-}
+test.describe('Dashboard', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    await expectDashboardLoaded(page, testUsers.admin.displayName);
+  });
 
-test('Dashboard Initial Load', async ({ page }) => {
-  await loginAsAdmin(page);
-});
+  test('loads the authenticated dashboard from saved state', async ({ page }) => {
+    await expect(page.getByText('Welcome to MentrixOS Admin Panel!')).toBeVisible();
+  });
 
-test('User Information Display', async ({ page }) => {
-  await loginAsAdmin(page);
-  await expect(page.getByText('Hey Ayush N')).toBeVisible();
-});
+  test('displays the signed-in user information', async ({ page }) => {
+    await expect(page.getByText(`Hey ${testUsers.admin.displayName}`)).toBeVisible();
+  });
 
-test('Dashboard UI Verification', async ({ page }) => {
-  await loginAsAdmin(page);
+  test('shows the key dashboard metrics', async ({ page }) => {
+    await expect(page.getByRole('heading', { name: 'Active Institutes', exact: true })).toBeVisible();
+    await expect(page.getByText('08')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Total Users', exact: true })).toBeVisible();
+    await expect(page.getByText('50+')).toBeVisible();
+  });
 
-  await expect(page.getByText('Welcome to MentrixOS')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Active Institutes', exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Total Users', exact: true })).toBeVisible();
-});
+  test('logs out from the dashboard', async ({ page }) => {
+    await page.getByRole('button', { name: 'Logout' }).click();
 
-test('Logout Functionality', async ({ page }) => {
-  await loginAsAdmin(page);
+    await expectLoggedOut(page);
+  });
 
-  await page.getByRole('button', { name: 'Logout' }).click();
+  test('does not restore the dashboard after logout and back navigation', async ({ page }) => {
+    await page.getByRole('button', { name: 'Logout' }).click();
 
-  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
-});
+    await expectLoggedOut(page);
 
-test('Back Navigation After Logout', async ({ page }) => {
-  await loginAsAdmin(page);
+    await page.goBack();
 
-  await page.getByRole('button', { name: 'Logout' }).click();
-
-  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
-
-  await page.goBack();
-
-  await expect(page.getByText('Hey Ayush N')).not.toBeVisible();
+    await expect(page.getByText(`Hey ${testUsers.admin.displayName}`)).not.toBeVisible();
+  });
 });

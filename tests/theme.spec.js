@@ -1,49 +1,49 @@
 import { test, expect } from '@playwright/test';
+import { expectDarkThemeDisabled, expectDarkThemeEnabled } from './support/helpers.js';
 
-async function openLogin(page) {
-  await page.goto('/');
-  await expect(page.getByTestId('login-email-or-phone')).toBeVisible();
-}
+test.use({ storageState: { cookies: [], origins: [] } });
 
-function themeToggle(page) {
-  return page.locator('.top-right-actions .icon-btn').nth(1);
-}
+test.describe('Login theme', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    await expect(page.getByTestId('login-email-or-phone')).toBeVisible();
+  });
 
-function darkTheme(page) {
-  return page.locator('.dark-theme');
-}
+  test('enables dark theme', async ({ page }) => {
+    await page.getByTestId('theme-toggle').click();
 
-test('Enable Dark Theme', async ({ page }) => {
-  await openLogin(page);
-  await themeToggle(page).click();
-  await expect(darkTheme(page)).toBeVisible();
-});
+    await expectDarkThemeEnabled(page);
+    await expect(page.getByTestId('theme-toggle')).toHaveAttribute('aria-pressed', 'true');
+  });
 
-test('Theme Toggle Validation', async ({ page }) => {
-  await openLogin(page);
-  await themeToggle(page).click();
-  await expect(darkTheme(page)).toBeVisible();
+  test('toggles dark theme off again', async ({ page }) => {
+    await page.getByTestId('theme-toggle').click();
+    await expectDarkThemeEnabled(page);
 
-  await themeToggle(page).click();
-  await expect(darkTheme(page)).toHaveCount(0);
-});
+    await page.getByTestId('theme-toggle').click();
 
-test('Theme State After Refresh', async ({ page }) => {
-  await openLogin(page);
-  await themeToggle(page).click();
-  await expect(darkTheme(page)).toBeVisible();
+    await expectDarkThemeDisabled(page);
+    await expect(page.getByTestId('theme-toggle')).toHaveAttribute('aria-pressed', 'false');
+  });
 
-  await page.reload();
-  await expect(page.getByTestId('login-email-or-phone')).toBeVisible();
-  await expect(darkTheme(page)).toHaveCount(0);
-});
+  test('persists theme state after refresh', async ({ page }) => {
+    await page.getByTestId('theme-toggle').click();
+    await expectDarkThemeEnabled(page);
 
-test('Text Readability in Dark Mode', async ({ page }) => {
-  await openLogin(page);
-  await themeToggle(page).click();
+    await page.reload();
 
-  await expect(page.getByRole('heading', { name: 'Mentrix OS' })).toBeVisible();
-  await expect(page.getByTestId('login-email-or-phone')).toBeVisible();
-  await expect(page.getByTestId('login-password')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
+    await expect(page.getByTestId('login-email-or-phone')).toBeVisible();
+    await expectDarkThemeEnabled(page);
+    await expect(page.evaluate(() => localStorage.getItem('theme'))).resolves.toBe('dark');
+  });
+
+  test('keeps login controls readable in dark mode', async ({ page }) => {
+    await page.getByTestId('theme-toggle').click();
+
+    await expectDarkThemeEnabled(page);
+    await expect(page.getByRole('heading', { name: 'Mentrix OS' })).toBeVisible();
+    await expect(page.getByTestId('login-email-or-phone')).toBeVisible();
+    await expect(page.getByTestId('login-password')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Continue' })).toBeVisible();
+  });
 });
